@@ -1,15 +1,37 @@
 services:
-  nginx:
-    container_name: nginx
-    build: ./services/nginx/
-    ports:
-      - 443:443
+  mariadb:
+    container_name: mariadb
+    build: 
+      context: ./services/mariadb/
+      args:
+        - DB_NAME=${DB_NAME}
+        - ROOT_PASS=${ROOT_PASS}
+        - DB_USER=${DB_USER}
+        - USER_PASS=${USER_PASS}
     expose:
-      - 9000
+      - 3306
     restart: on-failure
     networks:
       - my_network
+    volumes:
+      - wp_db:/var/lib/mysql
+
+
+  # nginx:
+  #   container_name: nginx
+  #   build: ./services/nginx/
+  #   ports:
+  #     - 443:443
+  #   expose:
+  #     - 9000
+  #   restart: on-failure
+  #   networks:
+  #     - my_network
 
 networks:
   my_network:
     name: "my_network"
+
+volumes:
+  wp_db:
+  wp_src:
