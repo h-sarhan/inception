@@ -13,4 +13,5 @@ COPY ./nginx.conf /etc/nginx/sites-available/default
 # Expose port 443 the container will listen on
 EXPOSE 443/tcp
 
+# Run nginx when container starts
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
