@@ -1,28 +1,25 @@
-FROM alpine:3.16
+FROM debian:buster
 
 LABEL author.name="Hassan Sarhan"
 LABEL author.email="hassanAsarhan@outlook.com"
 LABEL author.intra="hsarhan"
 
 # Update package lists and install mariadb
-RUN apk update \
-    && apk add openrc mariadb mariadb-common mariadb-client
-
-COPY ./setup.sh .
+RUN apt -y update -y && \
+    apt -y install curl software-properties-common gnupg2 && \
+    curl -LsS -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup && \
+    bash mariadb_repo_setup && \
+    apt update -y && \
+    apt -y install mariadb-server mariadb-client
+    # mkdir /var/run/mysqld && \
+    # chown -R mysql:mysql /var/run/mysqld
 
 # Get arguments from .env
-ARG DB_NAME
-ARG ROOT_PASS
-ARG DB_USER
-ARG USER_PASS
+# ARG DB_NAME
+# ARG ROOT_PASS
+# ARG DB_USER
+# ARG USER_PASS
 
-# RUN ["/bin/sh", "/setup.sh"]
-RUN openrc && \
-    touch /run/openrc/softlevel && \
-    rc-service mariadb setup && \
-    rc-service mariadb start && \
-    mariadb -u root -e "CREATE DATABASE ${DB_NAME};"
+# RUN mariadb -u root -e "CREATE DATABASE ${DB_NAME};"
 
-COPY ./setup.sh .
-
-CMD ["/bin/sh", "./setup.sh"]
+CMD ["/bin/bash", "-c", "mysqld_safe"]

@@ -16,17 +16,18 @@ services:
     volumes:
       - wp_db:/var/lib/mysql
 
-
-  # nginx:
-  #   container_name: nginx
-  #   build: ./services/nginx/
-  #   ports:
-  #     - 443:443
-  #   expose:
-  #     - 9000
-  #   restart: on-failure
-  #   networks:
-  #     - my_network
+  nginx:
+    container_name: nginx
+    build: ./services/nginx/
+    ports:
+      - 443:443
+    expose:
+      - 9000
+    restart: on-failure
+    networks:
+      - my_network
+    depends_on:
+      - mariadb
 
 networks:
   my_network:
