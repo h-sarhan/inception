@@ -5,9 +5,10 @@ services:
       context: ./services/mariadb/
       args:
         - DB_NAME=${DB_NAME}
-        - ROOT_PASS=${ROOT_PASS}
+        - ADMIN_NAME=${ADMIN_NAME}
+        - ADMIN_PASS=${ADMIN_PASS}
         - DB_USER=${DB_USER}
-        - USER_PASS=${USER_PASS}
+        - DB_USER_PASS=${DB_USER_PASS}
     expose:
       - 3306
     restart: on-failure
