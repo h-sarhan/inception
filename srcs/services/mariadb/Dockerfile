@@ -16,11 +16,17 @@ RUN apt-get -y update -y && \
 ARG DB_NAME
 ARG ADMIN_NAME
 ARG ADMIN_PASS
-ARG DB_USER
+ARG DB_USER_NAME
 ARG DB_USER_PASS
+ARG ROOT_PASS
 
 RUN service mariadb start && \
     mariadb -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};" && \
-    mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'localhost' IDENTIFIED BY '${ADMIN_PASS}}';"
+    mariadb -u root -e "CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'localhost' IDENTIFIED BY '${DB_USER_PASS}';" && \
+    mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'localhost' IDENTIFIED BY '${ADMIN_PASS}';" && \
+    mariadb -u root -e "FLUSH PRIVILEGES;" && \
+    mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASS}';"
+
+
 
 CMD ["/bin/bash", "-c", "mysqld_safe"]

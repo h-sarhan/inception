@@ -1,3 +1,4 @@
+version: '2'
 services:
   mariadb:
     container_name: mariadb
@@ -7,8 +8,9 @@ services:
         - DB_NAME=${DB_NAME}
         - ADMIN_NAME=${ADMIN_NAME}
         - ADMIN_PASS=${ADMIN_PASS}
-        - DB_USER=${DB_USER}
+        - DB_USER_NAME=${DB_USER_NAME}
         - DB_USER_PASS=${DB_USER_PASS}
+        - ROOT_PASS=${ROOT_PASS}
     expose:
       - 3306
     restart: on-failure
@@ -22,8 +24,6 @@ services:
     build: ./services/nginx/
     ports:
       - 443:443
-    expose:
-      - 9000
     restart: on-failure
     networks:
       - my_network
@@ -36,4 +36,14 @@ networks:
 
 volumes:
   wp_db:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $HOME/data/wp_db
   wp_src:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $HOME/data/wp_src
