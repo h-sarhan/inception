@@ -1,5 +1,6 @@
 FROM debian:buster
 
+# Setting labels
 LABEL author.name="Hassan Sarhan"
 LABEL author.email="hassanAsarhan@outlook.com"
 LABEL author.intra="hsarhan"
@@ -20,13 +21,17 @@ ARG DB_USER_NAME
 ARG DB_USER_PASS
 ARG ROOT_PASS
 
+# Start and initialize mariadb
 RUN service mariadb start && \
+    # Create database
     mariadb -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};" && \
+    # Create WordPress user
     mariadb -u root -e "CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'localhost' IDENTIFIED BY '${DB_USER_PASS}';" && \
+    # Create WordPress Admin user
     mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'localhost' IDENTIFIED BY '${ADMIN_PASS}';" && \
     mariadb -u root -e "FLUSH PRIVILEGES;" && \
+    # Change root pass
     mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASS}';"
 
-
-
+# Run mariadb when container starts
 CMD ["/bin/bash", "-c", "mysqld_safe"]

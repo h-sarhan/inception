@@ -21,7 +21,11 @@ services:
 
   nginx:
     container_name: nginx
-    build: ./services/nginx/
+    build:
+      context: ./services/nginx/
+      args:
+      - SSL_KEY=${SSL_KEY}
+      - SSL_CERT=${SSL_CERT}
     ports:
       - 443:443
     restart: on-failure
