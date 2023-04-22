@@ -23,6 +23,7 @@ ARG ROOT_PASS
 
 # Replace two lines in mariadb config so that it uses ports rather than sockets
 RUN sed -i '/^# port =/c\port = 3306'  /etc/mysql/my.cnf && \
+    sed -i '/^bind-address/c\bind-address = 0.0.0.0'   /etc/mysql/mariadb.conf.d/50-server.cnf && \
     sed -i '/^socket =/c\# socket ='  /etc/mysql/my.cnf
     # echo "[mysqld]\nskip-networking=0\nskip-bind-address" >> /etc/mysql/my.cnf
 
@@ -35,8 +36,8 @@ RUN service mariadb start && \
     # Create WordPress user
     mariadb -u root -e "CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'localhost' IDENTIFIED BY '${DB_USER_PASS}';FLUSH PRIVILEGES;" && \
     # Create WordPress Admin user
-    mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'localhost' IDENTIFIED BY '${ADMIN_PASS}';FLUSH PRIVILEGES;" && \
-    mariadb -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${ADMIN_NAME}'@'localhost' IDENTIFIED BY '${ADMIN_PASS}' WITH GRANT OPTION;FLUSH PRIVILEGES;" && \
+    mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}';FLUSH PRIVILEGES;" && \
+    mariadb -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}' WITH GRANT OPTION;FLUSH PRIVILEGES;" && \
     # Change root pass
     mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASS}';"
 
