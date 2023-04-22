@@ -31,3 +31,9 @@ clean:
 fclean:
 	@docker compose -f srcs/docker-compose.yml down -v && \
 	echo "\n$YSCRUBBED CONTAINERS AND THEIR VOLUMES 🛀$N"
+	rm -rf ${HOME}/data/wp_db/*
+	rm -rf ${HOME}/data/wp_data/*
+
+re: fclean up
+
+.PHONY: build up mariadb nginx wordpress clean fclean re

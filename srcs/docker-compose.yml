@@ -48,10 +48,13 @@ services:
       - my_network
     volumes:
       - wp_data:/var/www/html/
+    depends_on:
+      - mariadb
 
 networks:
   my_network:
     name: "my_network"
+    driver: bridge
 
 volumes:
   wp_db:
