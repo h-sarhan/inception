@@ -30,9 +30,24 @@ services:
     restart: on-failure
     networks:
       - my_network
+    volumes:
+      - wp_data:/var/www/html/
     depends_on:
-      - mariadb
-    # Add wordpress volume here
+      - wordpress
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./services/wordpress/
+      # args:
+
+    expose:
+      - 9000
+    restart: on-failure
+    networks:
+      - my_network
+    volumes:
+      - wp_data:/var/www/html/
 
 networks:
   my_network:
@@ -45,9 +60,9 @@ volumes:
       type: 'none'
       o: 'bind'
       device: $HOME/data/wp_db
-  wp_src:
+  wp_data:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: $HOME/data/wp_src
+      device: $HOME/data/wp_data

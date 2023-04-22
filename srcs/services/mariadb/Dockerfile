@@ -25,10 +25,12 @@ ARG ROOT_PASS
 RUN service mariadb start && \
     # Create database
     mariadb -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};" && \
+    mariadb -u root -e "FLUSH PRIVILEGES;" && \
     # Create WordPress user
     mariadb -u root -e "CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'localhost' IDENTIFIED BY '${DB_USER_PASS}';" && \
     # Create WordPress Admin user
     mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'localhost' IDENTIFIED BY '${ADMIN_PASS}';" && \
+    mariadb -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${ADMIN_NAME}'@'localhost' IDENTIFIED BY '${ADMIN_PASS}' WITH GRANT OPTION;" && \
     mariadb -u root -e "FLUSH PRIVILEGES;" && \
     # Change root pass
     mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASS}';"
