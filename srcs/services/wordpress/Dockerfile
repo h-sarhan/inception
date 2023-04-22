@@ -15,13 +15,19 @@ RUN apt-get update && \
     php8.0-mysql php8.0-opcache php8.0-soap php8.0-xml php8.0-xmlrpc php8.0-zip
 
 
-# DEBUGGING
+# CHECKING TO SEE IF PHP-FPM works
+# RUN mkdir -p /var/www/html/ && \
+#     echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+
 RUN mkdir -p /var/www/html/ && \
-    echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+    mkdir -p /run/php
 
-RUN mkdir -p /run/php
-
+# Replace line in php-fpm config so that it listens on port 9000
 RUN sed -i '/^listen = /c\listen = wordpress:9000'  /etc/php/8.0/fpm/pool.d/www.conf
 
+RUN cd /tmp && \
+    wget https://wordpress.org/latest.tar.gz && \
+    tar -xvzf latest.tar.gz && \
+    mv wordpress /var/www/html/
 
 CMD [ "php-fpm8.0", "-F" ]
