@@ -25,9 +25,9 @@ RUN mkdir -p /var/www/html/ && \
 # Replace line in php-fpm config so that it listens on port 9000
 RUN sed -i '/^listen = /c\listen = wordpress:9000'  /etc/php/8.0/fpm/pool.d/www.conf
 
-RUN cd /tmp && \
-    wget https://wordpress.org/latest.tar.gz && \
-    tar -xvzf latest.tar.gz && \
-    mv wordpress /var/www/html/
+# RUN cd /tmp && \
+#     wget https://wordpress.org/latest.tar.gz && \
+#     tar -xvzf latest.tar.gz && \
+#     mv wordpress /var/www/html/
 
 CMD [ "php-fpm8.0", "-F" ]
