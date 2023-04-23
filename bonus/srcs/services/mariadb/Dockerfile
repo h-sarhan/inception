@@ -39,7 +39,8 @@ RUN service mariadb start && \
     mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}';FLUSH PRIVILEGES;" && \
     mariadb -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}' WITH GRANT OPTION;FLUSH PRIVILEGES;" && \
     # Change root pass
-    mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASS}';"
+    mariadb -u root -e "ALTER USER 'root'@'%' IDENTIFIED BY '${ROOT_PASS}';"
+    # mariadb -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${ROOT_PASS}';"
 
 # Run mariadb when container starts
 CMD ["/bin/bash", "-c", "mysqld_safe"]

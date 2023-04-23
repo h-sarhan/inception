@@ -18,6 +18,25 @@ services:
     volumes:
       - wp_db:/var/lib/mysql
 
+  adminer:
+    container_name: adminer
+    build: 
+      context: ./services/adminer/
+      # args:
+        # - DB_NAME=${DB_NAME}
+        # - ADMIN_NAME=${ADMIN_NAME}
+        # - ADMIN_PASS=${ADMIN_PASS}
+        # - DB_USER_NAME=${DB_USER_NAME}
+        # - DB_USER_PASS=${DB_USER_PASS}
+        # - ROOT_PASS=${ROOT_PASS}
+    # expose:
+    #   - 3306
+    restart: on-failure
+    networks:
+      - my_network
+    volumes:
+      - wp_db:/var/lib/mysql
+
   nginx:
     container_name: nginx
     build:

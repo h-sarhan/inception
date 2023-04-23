@@ -41,6 +41,10 @@ redis:
 	@echo "\n$BINSIDE REDIS 🧱$N"
 	@docker exec -it redis bash
 
+adminer:
+	@echo "\n$BINSIDE ADMINER $N"
+	@docker exec -it adminer bash
+
 clean:
 	@docker compose -f srcs/docker-compose.yml down && \
 	echo "\n$YCLEANED CONTAINERS 🧼$N"
@@ -51,6 +55,6 @@ fclean:
 	rm -rf ${VOL_DIR}/wp_db/*
 	rm -rf ${VOL_DIR}/wp_data/*
 
-re: fclean up
+re: set_vol_dir fclean up
 
 .PHONY: build up mariadb nginx minecraft redis wordpress clean fclean re
