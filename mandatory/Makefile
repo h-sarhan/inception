@@ -5,18 +5,19 @@ B=\033[0;34m
 N=\033[0m
 
 UNAME := $(shell uname)
-
 VOL_DIR = /Users/hsarhan/data
 ifeq ($(UNAME), Linux)
-	sed -i '/^VOL_DIR=/c\VOL_DIR=/home/hsarhan/data'  /etc/mysql/my.cnf
 	VOL_DIR = /home/hsarhan/data
 endif
 
-build:
+set_vol_dir:
+	grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
+
+build: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml build && \
 	echo "\n$GBUILT CONTAINERS 🔨$N"
 
-up:
+up: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml up --build -d && \
 	echo "\n$GCONTAINERS UP AND RUNNING IN THE BACKGROUND ✅$N"
 

@@ -5,18 +5,19 @@ B=\033[0;34m
 N=\033[0m
 
 UNAME := $(shell uname)
-
 VOL_DIR = /Users/hsarhan/data
 ifeq ($(UNAME), Linux)
-	sed -i '/^VOL_DIR=/c\VOL_DIR=/home/hsarhan/data'  /etc/mysql/my.cnf
 	VOL_DIR = /home/hsarhan/data
 endif
 
-build:
+set_vol_dir:
+	grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
+
+build: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml build && \
 	echo "\n$GBUILT CONTAINERS 🔨$N"
 
-up:
+up: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml up --build -d && \
 	echo "\n$GCONTAINERS UP AND RUNNING IN THE BACKGROUND ✅$N"
 
@@ -36,6 +37,10 @@ minecraft:
 	@echo "\n$BINSIDE MINECRAFT 🌲🪓$N"
 	@docker exec -it minecraft bash
 
+redis:
+	@echo "\n$BINSIDE REDIS 🧱$N"
+	@docker exec -it redis bash
+
 clean:
 	@docker compose -f srcs/docker-compose.yml down && \
 	echo "\n$YCLEANED CONTAINERS 🧼$N"
@@ -48,4 +53,4 @@ fclean:
 
 re: fclean up
 
-.PHONY: build up mariadb nginx wordpress clean fclean re
+.PHONY: build up mariadb nginx minecraft redis wordpress clean fclean re

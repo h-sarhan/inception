@@ -29,7 +29,6 @@ RUN sed -i '/^listen = /c\listen = wordpress:9000'  /etc/php/8.0/fpm/pool.d/www.
 
 EXPOSE 9000
 
-# ! CONSIDER DOWNLOADING WORDPRESS IN A RUN COMMAND
 COPY ./wp_install.sh .
 
 CMD [ "/bin/bash", "-c", "/bin/bash ./wp_install.sh && php-fpm8.0 -F" ]

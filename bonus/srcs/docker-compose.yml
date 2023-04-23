@@ -36,6 +36,25 @@ services:
       wordpress:
         condition: service_healthy
 
+  redis:
+    container_name: redis
+    build:
+      context: ./services/redis/
+      # # args:
+      #   - ???=???
+    # ports:
+    #   - 443:443
+    expose:
+      - 6379
+    restart: on-failure
+    networks:
+      - my_network
+    volumes:
+      - wp_data:/var/www/html/
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
   wordpress:
     container_name: wordpress
     build:
@@ -62,19 +81,19 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
-      start_period: 10s
+      start_period: 15s
 
-  minecraft:
-    container_name: minecraft
-    build:
-      context: ./services/minecraft/
-      args:
-        - NGROK_AUTH=${NGROK_AUTH}
-    ports:
-      - 25565:25565
-    restart: on-failure
-    volumes:
-      - minecraft_data:/opt/minecraft
+  # minecraft:
+  #   container_name: minecraft
+  #   build:
+  #     context: ./services/minecraft/
+  #     args:
+  #       - NGROK_AUTH=${NGROK_AUTH}
+  #   ports:
+  #     - 25565:25565
+  #   restart: on-failure
+  #   volumes:
+  #     - minecraft_data:/opt/minecraft
 
 networks:
   my_network:
