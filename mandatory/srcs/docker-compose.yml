@@ -1,0 +1,85 @@
+services:
+  mariadb:
+    container_name: mariadb
+    build: 
+      context: ./services/mariadb/
+      args:
+        - DB_NAME=${DB_NAME}
+        - ADMIN_NAME=${ADMIN_NAME}
+        - ADMIN_PASS=${ADMIN_PASS}
+        - DB_USER_NAME=${DB_USER_NAME}
+        - DB_USER_PASS=${DB_USER_PASS}
+        - ROOT_PASS=${ROOT_PASS}
+    expose:
+      - 3306
+    restart: on-failure
+    networks:
+      - my_network
+    volumes:
+      - wp_db:/var/lib/mysql
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./services/nginx/
+      args:
+      - SSL_KEY=${SSL_KEY}
+      - SSL_CERT=${SSL_CERT}
+    ports:
+      - 443:443
+    restart: on-failure
+    networks:
+      - my_network
+    volumes:
+      - wp_data:/var/www/html/
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./services/wordpress/
+    environment:
+      DB_NAME: ${DB_NAME}
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_PASS: ${ADMIN_PASS}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      DB_USER_NAME: ${DB_USER_NAME}
+      DB_USER_PASS: ${DB_USER_PASS}
+      ROOT_PASS: ${ROOT_PASS}
+    expose:
+      - 9000
+    restart: on-failure
+    networks:
+      - my_network
+    volumes:
+      - wp_data:/var/www/html/
+    depends_on:
+      - mariadb
+    healthcheck:
+      test: service php8.0-fpm status
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+networks:
+  my_network:
+    name: "my_network"
+    driver: bridge
+
+volumes:
+  wp_db:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $HOME/data/wp_db
+  wp_data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: $HOME/data/wp_data
