@@ -24,6 +24,10 @@ wordpress:
 	@echo "\n$BINSIDE WORDPRESS 🤓$N"
 	@docker exec -it wordpress bash
 
+minecraft:
+	@echo "\n$BINSIDE MINECRAFT 🌲🪓$N"
+	@docker exec -it minecraft bash
+
 clean:
 	@docker compose -f srcs/docker-compose.yml down && \
 	echo "\n$YCLEANED CONTAINERS 🧼$N"
