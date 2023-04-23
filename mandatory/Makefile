@@ -4,6 +4,14 @@ Y=\033[0;33m
 B=\033[0;34m
 N=\033[0m
 
+UNAME := $(shell uname)
+
+VOL_DIR = /Users/hsarhan/data
+ifeq ($(UNAME), Linux)
+	sed -i '/^VOL_DIR=/c\VOL_DIR=/home/hsarhan/data'  /etc/mysql/my.cnf
+	VOL_DIR = /home/hsarhan/data
+endif
+
 build:
 	@docker compose -f srcs/docker-compose.yml build && \
 	echo "\n$GBUILT CONTAINERS 🔨$N"
@@ -31,8 +39,8 @@ clean:
 fclean:
 	@docker compose -f srcs/docker-compose.yml down -v && \
 	echo "\n$YSCRUBBED CONTAINERS AND THEIR VOLUMES 🛀$N"
-	rm -rf ${HOME}/data/wp_db/*
-	rm -rf ${HOME}/data/wp_data/*
+	rm -rf ${VOL_DIR}/wp_db/*
+	rm -rf ${VOL_DIR}/wp_data/*
 
 re: fclean up
 
