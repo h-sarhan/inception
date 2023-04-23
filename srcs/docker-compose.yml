@@ -39,8 +39,15 @@ services:
     container_name: wordpress
     build:
       context: ./services/wordpress/
-      # args:
 
+    environment:
+      DB_NAME: ${DB_NAME}
+      ADMIN_NAME: ${ADMIN_NAME}
+      ADMIN_PASS: ${ADMIN_PASS}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      DB_USER_NAME: ${DB_USER_NAME}
+      DB_USER_PASS: ${DB_USER_PASS}
+      ROOT_PASS: ${ROOT_PASS}
     expose:
       - 9000
     restart: on-failure

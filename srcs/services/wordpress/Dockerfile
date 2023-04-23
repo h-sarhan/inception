@@ -29,19 +29,6 @@ RUN sed -i '/^listen = /c\listen = wordpress:9000'  /etc/php/8.0/fpm/pool.d/www.
 
 EXPOSE 9000
 
-# Wordpress CLI setup
-# RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-#     chmod +x wp-cli.phar && \
-#     mv wp-cli.phar /usr/local/bin/wp && \
-#     cd /var/www/html/wordpress && \
-#     wp core download  --path="/var/www/html/wordpress" --allow-root && \
-#     wp config create --path="/var/www/html/wordpress" --allow-root --dbname=wordpress --dbuser=bigboi --dbpass=ligma --dbhost=mariadb:3306
-    #  && \
-    # wp core install --path="/var/www/html/wordpress" --allow-root --url=$DOMAIN_NAME --title="$WP_SITE_TITLE" --admin_user=$WP_ADMIN --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL && \
-    # wp plugin update --allow-root --all && \
-    # wp user create --path="/var/www/html/wordpress" --allow-root $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD && \
-    # chown www-data:www-data /var/www/html/wordpress/wp-content/uploads -R
+COPY ./wp_install.sh .
 
-
-
-CMD [ "php-fpm8.0", "-F" ]
+CMD [ "/bin/bash", "-c", "/bin/bash ./wp_install.sh && php-fpm8.0 -F" ]

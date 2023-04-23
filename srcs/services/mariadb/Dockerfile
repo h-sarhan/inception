@@ -13,7 +13,7 @@ RUN apt-get -y update -y && \
     apt-get update -y && \
     apt-get -y install mariadb-server mariadb-client  sudo
 
-# Get arguments from .env
+# Get arguments from docker-compose file
 ARG DB_NAME
 ARG ADMIN_NAME
 ARG ADMIN_PASS
@@ -34,7 +34,7 @@ RUN service mariadb start && \
     # Create database
     mariadb -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};FLUSH PRIVILEGES;" && \
     # Create WordPress user
-    mariadb -u root -e "CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'localhost' IDENTIFIED BY '${DB_USER_PASS}';FLUSH PRIVILEGES;" && \
+    mariadb -u root -e "CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'%' IDENTIFIED BY '${DB_USER_PASS}';FLUSH PRIVILEGES;" && \
     # Create WordPress Admin user
     mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}';FLUSH PRIVILEGES;" && \
     mariadb -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}' WITH GRANT OPTION;FLUSH PRIVILEGES;" && \
