@@ -87,16 +87,16 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: $HOME/data/wp_db
+      device: $VOL_DIR/wp_db
   wp_data:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: $HOME/data/wp_data
+      device: $VOL_DIR/wp_data
   minecraft_data:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: $HOME/data/minecraft_data
+      device: $VOL_DIR/minecraft_data
