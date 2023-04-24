@@ -11,7 +11,7 @@ ifeq ($(UNAME), Linux)
 endif
 
 set_vol_dir:
-	grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
+	@grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
 
 build: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml build && \
@@ -41,9 +41,9 @@ redis:
 	@echo "\n$BINSIDE REDIS 🧱$N"
 	@docker exec -it redis bash
 
-adminer:
-	@echo "\n$BINSIDE ADMINER $N"
-	@docker exec -it adminer bash
+ftp:
+	@echo "\n$BINSIDE FTP 🗃 $N"
+	@docker exec -it ftp bash
 
 clean:
 	@docker compose -f srcs/docker-compose.yml down && \

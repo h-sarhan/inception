@@ -1,7 +1,7 @@
 services:
   mariadb:
     container_name: mariadb
-    build: 
+    build:
       context: ./services/mariadb/
       args:
         - DB_NAME=${DB_NAME}
@@ -17,6 +17,24 @@ services:
       - my_network
     volumes:
       - wp_db:/var/lib/mysql
+
+  ftp:
+    container_name: ftp
+    build:
+      context: ./services/ftp/
+    ports:
+      - 21:21
+    environment:
+      FTP_PASS: ${FTP_PASS}
+    restart: on-failure
+    networks:
+      - my_network
+    volumes:
+      - wp_data:/var/www/html
+    depends_on:
+      wordpress:
+        condition: service_healthy
+
 
   nginx:
     container_name: nginx
@@ -79,17 +97,17 @@ services:
       retries: 20
       start_period: 15s
 
-  # minecraft:
-  #   container_name: minecraft
-  #   build:
-  #     context: ./services/minecraft/
-  #     args:
-  #       - NGROK_AUTH=${NGROK_AUTH}
-  #   ports:
-  #     - 25565:25565
-  #   restart: on-failure
-  #   volumes:
-  #     - minecraft_data:/opt/minecraft
+  minecraft:
+    container_name: minecraft
+    build:
+      context: ./services/minecraft/
+      args:
+        - NGROK_AUTH=${NGROK_AUTH}
+    ports:
+      - 25565:25565
+    restart: on-failure
+    volumes:
+      - minecraft_data:/opt/minecraft
 
 networks:
   my_network:
