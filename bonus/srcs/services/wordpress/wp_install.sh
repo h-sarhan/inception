@@ -14,3 +14,4 @@ wp --path="/var/www/html/wordpress"  --allow-root config set WP_REDIS_PORT 6379
 wp --path="/var/www/html/wordpress"  --allow-root config set WP_DEBUG true
 wp --path="/var/www/html/wordpress"  --allow-root config set WP_DEBUG_LOG true
 wp --path="/var/www/html/wordpress"  --allow-root redis enable
+wget "http://www.adminer.org/latest.php" -O /var/www/html/wordpress/adminer.php

@@ -18,8 +18,7 @@ RUN apt-get update && \
 RUN curl -LsS -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup && \
     bash mariadb_repo_setup && \
     apt-get update -y && \
-    apt-get -y install mariadb-client
-
+    apt-get -y install mariadb-client wget
 
 RUN mkdir -p /var/www/html/wordpress && \
     mkdir -p /run/php
