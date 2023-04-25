@@ -19,7 +19,12 @@ RUN mkdir /certs && \
     echo "${SSL_CERT}" > /certs/ssl.cert
 
 # Copy nginx config file to container
-COPY ./nginx.conf /etc/nginx/sites-available/default
+COPY ./wordpress.conf /etc/nginx/sites-available/wordpress.conf
+
+RUN mkdir -p /var/www/html/wordpress && \
+    mkdir -p /var/www/html/inception && \
+    chown -R www-data:www-data /var/www/html/wordpress && \
+    ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled/
 
 # Run nginx when container starts
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
