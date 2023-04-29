@@ -16,9 +16,11 @@ def main():
     # Instantiate FTP handler class
     handler = FTPHandler
     handler.authorizer = authorizer
+    handler.permit_foreign_addresses = True
 
     # Define a customized banner (string returned when client connects)
     handler.banner = "CLIENT CONNECTED"
+    handler.passive_ports = range(5000, 5100)
 
     # Instantiate FTP server class and listen on 0.0.0.0:2121
     address = ('', 21)
