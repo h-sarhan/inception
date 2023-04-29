@@ -10,7 +10,7 @@ def main():
 
     # Define a new user having full r/w permissions and a read-only
     # anonymous user
-    authorizer.add_user('mr_file', os.environ['FTP_PASS'], '/var/www/html/wordpress', perm='elradfmwMT')
+    authorizer.add_user(os.environ['FTP_USER'], os.environ['FTP_PASS'], '/var/www/html/wordpress', perm='elradfmwMT')
     authorizer.add_anonymous(os.getcwd())
 
     # Instantiate FTP handler class

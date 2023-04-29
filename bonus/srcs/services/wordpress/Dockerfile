@@ -4,7 +4,11 @@ FROM debian:buster
 LABEL author.name="Hassan Sarhan"
 LABEL author.email="hassanAsarhan@outlook.com"
 LABEL author.intra="hsarhan"
+LABEL description="A Docker container that builds a WordPress server, which is\
+    a popular content management system used to create and manage websites and \
+    blogs, providing a flexible and user-friendly platform for web development and publishing."
 
+# Installing PHP dependencies of wordpress
 RUN apt-get update && \
     apt-get install -y apt-transport-https lsb-release ca-certificates wget curl software-properties-common gnupg2 unzip && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
@@ -20,27 +24,37 @@ RUN curl -LsS -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup && \
     apt-get update -y && \
     apt-get -y install mariadb-client wget
 
+# Creating directories for wordpress and the static website
 RUN mkdir -p /var/www/html/wordpress && \
     mkdir -p /var/www/html/inception && \
     mkdir -p /run/php && \
+    # Installing the wordpress cli
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
     mv wp-cli.phar /usr/local/bin/wp && \
+    # Downloading wordpress into the volume
     wp core download --path="/var/www/html/wordpress" --allow-root && \
+    # Installing adminer
     mkdir -p /var/www/html/adminer && \
     wget "http://www.adminer.org/latest.php" -O /var/www/html/adminer/adminer.php && \
+    # Change ownership and permissions of wordpress files
     chmod -R 0755 /var/www/html/ && \
     chown -R www-data:www-data /var/www/html/
 
 # Replace line in php-fpm config so that it listens on port 9000
 RUN sed -i '/^listen = /c\listen = wordpress:9000'  /etc/php/8.0/fpm/pool.d/www.conf
 
+# Copy wordpress config
 COPY ./wp-config.php /var/www/html/wordpress/wp-config.php
 
+# Copy static website
 COPY inception_website /inception
 
+# Expose port 9000
 EXPOSE 9000
 
+# Copy wordpress local install script
 COPY ./wp_install.sh .
 
+# Run wordpress local install script and start php fastcgi processor
 CMD [ "/bin/bash", "-c", "/bin/bash ./wp_install.sh && php-fpm8.0 -F" ]

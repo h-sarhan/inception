@@ -10,12 +10,12 @@ ifeq ($(UNAME), Linux)
 	VOL_DIR = /home/hsarhan/data
 endif
 
-set_vol_dir:
-	grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
-
 build: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml build && \
 	echo "\n$GBUILT CONTAINERS 🔨$N"
+
+set_vol_dir:
+	@grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
 
 up: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml up --build -d && \
@@ -43,6 +43,6 @@ fclean:
 	rm -rf ${VOL_DIR}/wp_db/*
 	rm -rf ${VOL_DIR}/wp_data/*
 
-re: fclean up
+re: set_vol_dir fclean up
 
-.PHONY: build up mariadb nginx wordpress clean fclean re
+.PHONY: build up mariadb nginx minecraft redis wordpress clean fclean re
