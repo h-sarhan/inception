@@ -24,7 +24,7 @@ RUN curl -LsS -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup && \
     apt-get update -y && \
     apt-get -y install mariadb-client wget
 
-# Creating directories for wordpress and the static website
+# Creating directory for wordpress
 RUN mkdir -p /var/www/html/wordpress && \
     mkdir -p /run/php && \
     # Installing the wordpress cli

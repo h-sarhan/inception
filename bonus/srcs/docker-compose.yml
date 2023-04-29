@@ -102,17 +102,17 @@ services:
       wordpress:
         condition: service_healthy
 
-  # minecraft:
-  #   container_name: minecraft
-  #   build:
-  #     context: ./services/minecraft/
-  #     args:
-  #       - NGROK_AUTH=${NGROK_AUTH}
-  #   ports:
-  #     - 25565:25565
-  #   restart: on-failure
-  #   volumes:
-  #     - minecraft_data:/opt/minecraft
+  minecraft:
+    container_name: minecraft
+    build:
+      context: ./services/minecraft/
+      args:
+        - NGROK_AUTH=${NGROK_AUTH}
+    ports:
+      - 25565:25565
+    restart: on-failure
+    volumes:
+      - minecraft_data:/opt/minecraft
 
 networks:
   my_network:

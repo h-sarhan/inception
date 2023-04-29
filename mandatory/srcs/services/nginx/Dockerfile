@@ -24,8 +24,8 @@ RUN mkdir /certs && \
 # Copy nginx config file to container
 COPY ./server.conf /etc/nginx/sites-available/server.conf
 
-# Creating directories for wordpress and static website and setting the
-# correct permissions and ownership for them
+# Creating directory for wordpress and setting the
+# correct permissions and ownership for it
 RUN mkdir -p /var/www/html/wordpress && \
     chmod -R 0755 /var/www/html && \
     chown -R www-data:www-data /var/www/html && \
