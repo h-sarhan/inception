@@ -6,7 +6,7 @@ LABEL author.email="hassanAsarhan@outlook.com"
 LABEL author.intra="hsarhan"
 
 RUN apt-get update && \
-    apt-get install -y apt-transport-https lsb-release ca-certificates wget curl software-properties-common gnupg2 && \
+    apt-get install -y apt-transport-https lsb-release ca-certificates wget curl software-properties-common gnupg2 unzip && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list && \
     apt-get update && \
@@ -21,10 +21,23 @@ RUN curl -LsS -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup && \
     apt-get -y install mariadb-client wget
 
 RUN mkdir -p /var/www/html/wordpress && \
-    mkdir -p /run/php
+    mkdir -p /var/www/html/inception && \
+    mkdir -p /run/php && \
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp && \
+    wp core download --path="/var/www/html/wordpress" --allow-root && \
+    mkdir -p /var/www/html/adminer && \
+    wget "http://www.adminer.org/latest.php" -O /var/www/html/adminer/adminer.php && \
+    chmod -R 0755 /var/www/html/ && \
+    chown -R www-data:www-data /var/www/html/
 
 # Replace line in php-fpm config so that it listens on port 9000
 RUN sed -i '/^listen = /c\listen = wordpress:9000'  /etc/php/8.0/fpm/pool.d/www.conf
+
+COPY ./wp-config.php /var/www/html/wordpress/wp-config.php
+
+COPY inception_website /inception
 
 EXPOSE 9000
 

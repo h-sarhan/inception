@@ -23,8 +23,11 @@ COPY ./wordpress.conf /etc/nginx/sites-available/wordpress.conf
 
 RUN mkdir -p /var/www/html/wordpress && \
     mkdir -p /var/www/html/inception && \
-    chown -R www-data:www-data /var/www/html/wordpress && \
+    chmod -R 0755 /var/www/html && \
+    chown -R www-data:www-data /var/www/html && \
     ln -s /etc/nginx/sites-available/wordpress.conf /etc/nginx/sites-enabled/
+    # ln -s /etc/nginx/sites-available/inception.conf /etc/nginx/sites-enabled/
 
 # Run nginx when container starts
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
+# CMD ["/bin/bash", "-c", "sleep infinity"]

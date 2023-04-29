@@ -32,14 +32,11 @@ EXPOSE 3306
 # # Start and initialize mariadb
 RUN service mariadb start && \
     # Create database
-    mariadb -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};FLUSH PRIVILEGES;" && \
-    # Create WordPress user
-    mariadb -u root -e "CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'%' IDENTIFIED BY '${DB_USER_PASS}';FLUSH PRIVILEGES;" && \
-    # Create WordPress Admin user
-    mariadb -u root -e "CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}';FLUSH PRIVILEGES;" && \
-    mariadb -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}' WITH GRANT OPTION;FLUSH PRIVILEGES;" && \
-    # Change root pass
-    mariadb -u root -e  "CREATE USER 'root'@'%' IDENTIFIED BY '${ROOT_PASS}'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION";
+    mariadb -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};FLUSH PRIVILEGES; \
+        CREATE USER IF NOT EXISTS '${DB_USER_NAME}'@'%' IDENTIFIED BY '${DB_USER_PASS}';FLUSH PRIVILEGES; \
+        CREATE USER IF NOT EXISTS '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}';FLUSH PRIVILEGES; \
+        GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${ADMIN_NAME}'@'%' IDENTIFIED BY '${ADMIN_PASS}' WITH GRANT OPTION;FLUSH PRIVILEGES; \
+        CREATE USER 'root'@'%' IDENTIFIED BY '${ROOT_PASS}'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"
 
 # Run mariadb when container starts
 CMD ["/bin/bash", "-c", "mysqld_safe"]

@@ -10,12 +10,12 @@ ifeq ($(UNAME), Linux)
 	VOL_DIR = /home/hsarhan/data
 endif
 
-set_vol_dir:
-	@grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
-
 build: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml build && \
 	echo "\n$GBUILT CONTAINERS 🔨$N"
+
+set_vol_dir:
+	@grep VOL_DIR ./srcs/.env  || echo "VOL_DIR=${VOL_DIR}" >> ./srcs/.env
 
 up: set_vol_dir
 	@docker compose -f srcs/docker-compose.yml up --build -d && \
